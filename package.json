@@ -3,8 +3,10 @@
   "version": "0.0.1",
   "description": "Self hosted Bot for easy vote in cosmos ecosystem",
   "main": "index.js",
+  "bin": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "pkg ."
   },
   "keywords": [
     "cosmos-ecosystem",
@@ -14,6 +16,14 @@
     "voting",
     "cosmos"
   ],
+  "pkg": {
+    "outputPath": "dist",
+    "targets": [
+      "node18-linux-x64",
+      "node18-macos-x64",
+      "node18-win-x64"
+    ]
+  },
   "author": "ruslan.glaznyov@gmail.com",
   "license": "MIT",
   "dependencies": {
@@ -27,6 +37,7 @@
     "prompts": "^2.4.2"
   },
   "devDependencies": {
-    "pino-pretty": "^7.6.1"
+    "pino-pretty": "^7.6.1",
+    "pkg": "^5.7.0"
   }
 }
