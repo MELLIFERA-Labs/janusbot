@@ -1,23 +1,23 @@
-import {Command} from 'commander';
-import TOML from '@iarna/toml';
-import fs from 'fs';
-import {
+const {Command} = require('commander');
+const TOML = require('@iarna/toml') ;
+const fs = require('fs');
+const {
 	binaryCliHandler,
 	walletCliHandler,
 	telegramCliHandler,
 	defaultNodeCliHandler,
 	feeHandler
-} from './src/cli-handlers.js';
-import os from 'os';
-import path from "path";
-import * as crypto from './src/crypto.js';
-import constant from "./src/constant.js";
-import createVoteBtns from "./src/keyboard/vote.inline.js";
-import {startChecker} from "./src/checker.js";
-import {createMessageFromProposal} from './src/utils.js'
-import startBot from "./src/bot.js";
-import {Bot} from 'grammy';
-import Logger from "./src/logger.js";
+} = require('./src/cli-handlers.js') ;
+const os = require('os');
+const path = require("path");
+const crypto = require('./src/crypto.js');
+const constant = require("./src/constant.js") ;
+const createVoteBtns = require("./src/keyboard/vote.inline.js");
+const startChecker = require("./src/checker.js");
+const {createMessageFromProposal} = require('./src/utils.js')
+const startBot = require("./src/bot.js") ;
+const {Bot} = require('grammy');
+const Logger = require("./src/logger.js");
 const logger = Logger('cli-handlers')
 const program = new Command();
 

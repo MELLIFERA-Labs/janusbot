@@ -1,5 +1,5 @@
-import fs from 'fs'
-export default class Store {
+const fs = require('fs')
+module.exports = class Store {
     constructor(pathToData) {
         this.path = pathToData
     }

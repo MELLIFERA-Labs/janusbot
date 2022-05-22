@@ -1,34 +1,35 @@
-import {Worker, isMainThread, workerData as config} from 'node:worker_threads';
-import {Bot} from 'grammy';
-import constant from './constant.js';
-import {fileURLToPath} from 'url';
-import {execFileSync} from "node:child_process";
-import {createMessageFromProposal} from './utils.js';
-import os from 'os';
-import path from 'node:path'
-import Store from './store.js';
-import createVoteBtns from "./keyboard/vote.inline.js";
-import humanInterval from "human-interval";
-import Logger from "./logger.js";
+const  {Worker, isMainThread, workerData: config} = require('node:worker_threads');
+const {Bot} = require('grammy') ;
+const constant = require('./constant.js') ;
+// const {fileURLToPath} = require('url') ;
+const {execFileSync} = require("node:child_process");
+const {createMessageFromProposal} = require('./utils.js');
+const os = require('os');
+const path = require('node:path')
+const Store = require( './store.js');
+const createVoteBtns = require("./keyboard/vote.inline.js");
+const humanInterval = require("human-interval");
+const Logger = require("./logger.js");
 const logger = Logger('checker')
-export let startChecker;
 if (isMainThread) {
-	startChecker = (config) => {
-		return new Worker(fileURLToPath(import.meta.url), {
+	module.exports = (config) => {
+		return new Worker(__filename, {
 			workerData: config
 		});
 	};
 } else {
-	const time = humanInterval(config.bot.proposals_check_timeout)
-	if(Number.isNaN(time) || !time) {
-		console.info('Invalid `proposals_check_timeout` configuration')
-		await new Promise(resolve => setTimeout(resolve, 0))
-		process.exit(0)
-	}
-	while (true) {
-		await startCheckProposals()
-		await new Promise(resolve => setTimeout(resolve, time))
-	}
+	(async function () {
+		const time = humanInterval(config.bot.proposals_check_timeout)
+		if(Number.isNaN(time) || !time) {
+			console.info('Invalid `proposals_check_timeout` configuration')
+			await new Promise(resolve => setTimeout(resolve, 0))
+			process.exit(0)
+		}
+		while (true) {
+			await startCheckProposals()
+			await new Promise(resolve => setTimeout(resolve, time))
+		}
+	})().catch(logger.error)
 }
 
 async function startCheckProposals() {

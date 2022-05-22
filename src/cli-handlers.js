@@ -1,11 +1,13 @@
-import prompt from "prompts";
-import ora from "ora";
-import {execFileSync} from "node:child_process";
-import { processValidate } from './utils.js'
-import constant from './constant.js'
-import {Bot} from "grammy";
+const prompt = require("prompts");
+// const ora = require("ora");
+const {execFileSync} = require("node:child_process");
+const { processValidate } = require('./utils.js')
+const constant = require('./constant.js')
+const {Bot} = require("grammy") ;
 
-export async function binaryCliHandler() {
+async function binaryCliHandler() {
+	const ora = (await import('ora')).default
+	console.log(ora);
 	return  processValidate(() => prompt({
 		type: 'text',
 		name: 'binary',
@@ -25,7 +27,9 @@ export async function binaryCliHandler() {
 	});
 }
 
-export async function telegramCliHandler() {
+async function telegramCliHandler() {
+	const ora = (await import('ora')).default
+
 	const telegramQuestions = [
 		{
 			type: 'text',
@@ -55,7 +59,9 @@ export async function telegramCliHandler() {
 	})
 }
 
-export async function walletCliHandler(binary) {
+async function walletCliHandler(binary) {
+	const ora = (await import('ora')).default
+
 	const walletQuestions = [{
 		type: 'text',
 		name: 'wallet',
@@ -81,7 +87,8 @@ export async function walletCliHandler(binary) {
 		}
 	})
 }
-export async function feeHandler() {
+async function feeHandler() {
+
 	const feeTypeQst = {
 		type: 'select',
 		name: 'feeType',
@@ -112,7 +119,9 @@ export async function feeHandler() {
 		value: 'auto'
 	}
 }
-export async function defaultNodeCliHandler() {
+async function defaultNodeCliHandler() {
+	const ora = await import('ora')
+
 	const nodeDefaultQuestion = {
 		type: 'toggle',
 		name: 'default_node',
@@ -153,4 +162,12 @@ export async function defaultNodeCliHandler() {
 		chainId: nodeInfo.result['node_info'].network
 	}
 
+}
+
+module.exports = {
+	binaryCliHandler,
+	telegramCliHandler,
+	walletCliHandler,
+	feeHandler,
+	defaultNodeCliHandler
 }

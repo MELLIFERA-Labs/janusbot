@@ -1,6 +1,6 @@
-import crypto from 'node:crypto'
+const crypto = require('node:crypto')
 
-export function encrypter(message, secret) {
+function encrypter(message, secret) {
 	const [key, iv] = secret.split(':')
 	const encrypter = crypto.createCipheriv("aes-256-cbc", key, iv);
 	let encryptedMsg = encrypter.update(message, "utf-8", "hex");
@@ -8,7 +8,7 @@ export function encrypter(message, secret) {
 	return encryptedMsg
 }
 
-export function decrypter(encryptedMessage, secret) {
+function decrypter(encryptedMessage, secret) {
 	const [key, iv] = secret.split(':')
 	const decrypter = crypto.createDecipheriv("aes-256-cbc", key, iv);
 	let decryptedMsg = decrypter.update(encryptedMessage, "hex", "utf8");
@@ -16,7 +16,11 @@ export function decrypter(encryptedMessage, secret) {
 	return decryptedMsg
 }
 
-export function createRandomSecret() {
+function createRandomSecret() {
 	return [crypto.randomBytes(32).toString("hex").slice(0, 32), crypto.randomBytes(16).toString("hex").slice(0, 16)].join(':');
 }
-
+module.exports = {
+	encrypter,
+	decrypter,
+	createRandomSecret
+}

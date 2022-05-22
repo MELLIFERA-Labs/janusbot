@@ -1,5 +1,5 @@
-import path from 'path'
-export default {
+const path = require('path')
+module.exports =  {
 	DEFAULT_NODE_ADDRESS:  'https://gravitychain.io:26657',
 	DEFAULT_APP_FOLDER: '.janusbot',
 	SECRET_FILE: '.secret',

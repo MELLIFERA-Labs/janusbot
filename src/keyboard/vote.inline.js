@@ -1,6 +1,6 @@
-import { InlineKeyboard } from 'grammy'
+const  { InlineKeyboard } = require('grammy')
 
-export default function createVoteBtns(id, select = null) {
+module.exports =  function createVoteBtns(id, select = null) {
 	const checker = (type) => (select === type && select !== null ? "✅" : "");
 	return new InlineKeyboard()
 		.text(

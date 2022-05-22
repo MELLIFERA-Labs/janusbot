@@ -1,14 +1,15 @@
-import { Bot } from 'grammy'
-import createVoteBtns from "./keyboard/vote.inline.js";
-import {execFileSync} from 'node:child_process'
-import {decrypter} from "./crypto.js";
-import path from "path";
-import constant from "./constant.js";
-import os from "os";
-import fs from "fs";
-import Logger from "./logger.js";
+const { Bot } = require('grammy')
+const createVoteBtns = require("./keyboard/vote.inline.js");
+const {execFileSync} = require('node:child_process')
+const {decrypter} = require("./crypto.js") ;
+const path = require("path") ;
+const constant = require("./constant.js");
+const os = require("os") ;
+const fs = require("fs");
+const Logger = require("./logger.js");
 const logger = Logger('bot')
-export default async function startBot(config) {
+
+module.exports =  async function startBot(config) {
 	const bot = new Bot(config.bot.telegram_bot)
 	const key = fs.readFileSync(path.join(os.homedir(), constant.PATH_TO_SECRET_FILE), 'utf-8')
 	bot.on("callback_query:data", async (ctx) => {

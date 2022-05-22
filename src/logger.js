@@ -1,6 +1,6 @@
-import pino from "pino";
+const pino = require("pino");
 // const logger = pino().child({module: 'test'})
-export default function Logger(name) {
+module.exports = function Logger(name) {
 	if (process.env.NODE_ENV === 'development')
 		return pino({
 			transport: {
