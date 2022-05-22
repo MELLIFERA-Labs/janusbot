@@ -1,14 +1,16 @@
 const pino = require("pino");
 // const logger = pino().child({module: 'test'})
 module.exports = function Logger(name) {
-	if (process.env.NODE_ENV === 'development')
 		return pino({
+			level: 'debug',
 			transport: {
 				target: 'pino-pretty',
 				options: {
-					colorize: true
+					colorize: false,
+					singleLine: true,
+					messageKey: 'msg',
+					ignore: 'pid,hostname',
 				}
 			}
 		}).child({category: name});
-	return pino({level: 'debug'}).child({category: name});
 }

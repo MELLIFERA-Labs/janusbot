@@ -34,10 +34,10 @@
     "node-fetch": "^3.2.4",
     "ora": "^6.1.0",
     "pino": "^7.11.0",
+    "pino-pretty": "^7.6.1",
     "prompts": "^2.4.2"
   },
   "devDependencies": {
-    "pino-pretty": "^7.6.1",
     "pkg": "^5.7.0"
   }
 }
