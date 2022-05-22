@@ -1,0 +1,11 @@
+[bot]
+telegram_bot = "2023400876:AAEvkZLowup9ecKSm3g_ZNOBSJV0EAcs6z8"
+telegram_chat_id = "340781973"
+proposals_check_timeout = "15 minutes"
+[cosmos]
+cosmos_binary = "/Users/apple/Desktop/gravity"
+keyring_passphrase = "12345678"
+chain_id = "gravity-bridge-3"
+wallet = "wallet"
+node_address = "https://gravitychain.io:26657"
+fees = "0tkyve"

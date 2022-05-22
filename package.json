@@ -1,0 +1,33 @@
+{
+  "name": "janusbot",
+  "version": "0.0.1",
+  "description": "Self hosted Bot for easy vote in cosmos ecosystem",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "cosmos-ecosystem",
+    "blockchain",
+    "telegram",
+    "bot",
+    "voting",
+    "cosmos"
+  ],
+  "author": "ruslan.glaznyov@gmail.com",
+  "license": "MIT",
+  "dependencies": {
+    "@iarna/toml": "^2.2.5",
+    "commander": "^9.2.0",
+    "grammy": "^1.8.3",
+    "human-interval": "^2.0.1",
+    "node-fetch": "^3.2.4",
+    "ora": "^6.1.0",
+    "pino": "^7.11.0",
+    "prompts": "^2.4.2"
+  },
+  "devDependencies": {
+    "pino-pretty": "^7.6.1"
+  }
+}
