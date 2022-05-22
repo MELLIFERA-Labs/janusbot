@@ -1,16 +1,18 @@
 const pino = require("pino");
+const pretty = require('pino-pretty')
 // const logger = pino().child({module: 'test'})
 module.exports = function Logger(name) {
-		return pino({
+		const prettyConfig = {
 			level: 'debug',
-			transport: {
-				target: 'pino-pretty',
-				options: {
-					colorize: false,
-					singleLine: true,
-					messageKey: 'msg',
-					ignore: 'pid,hostname',
-				}
-			}
-		}).child({category: name});
+			colorize: false,
+			singleLine: true,
+			messageKey: 'msg',
+			ignore: 'pid,hostname',
+		}
+		if (process.env.NODE_ENV === 'development') {
+			prettyConfig.colorize = true
+			delete prettyConfig.level
+		}
+		return  pino(pretty(prettyConfig)).child({category: name});
+
 }
