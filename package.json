@@ -1,6 +1,6 @@
 {
   "name": "janusbot",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Self hosted Bot to easy vote in cosmos ecosystem",
   "main": "index.js",
   "bin": "index.js",
@@ -28,6 +28,7 @@
   "license": "MIT",
   "dependencies": {
     "@iarna/toml": "^2.2.5",
+    "axios": "^0.27.2",
     "commander": "^9.2.0",
     "grammy": "^1.8.3",
     "human-interval": "^2.0.1",

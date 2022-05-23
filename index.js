@@ -55,7 +55,7 @@ program.command('init')
 			bot: {
 				telegram_bot: telegramAnswer['telegram_token'],
 				telegram_chat_id: telegramAnswer['telegram_chat_id'],
-				proposals_check_timeout: '15 minutes'
+				proposals_check_timeout: constant.DEFAULT_TIMEOUT_PROPOSAL_CHECK
 			},
 			cosmos: {
 				cosmos_binary: binaryAnswer.binary,

@@ -3,6 +3,7 @@ const ora = require("ora");
 const {execFileSync} = require("node:child_process");
 const { processValidate } = require('./utils.js')
 const constant = require('./constant.js')
+const axios = require('axios').default;
 const {Bot} = require("grammy") ;
 
 async function binaryCliHandler() {
@@ -134,8 +135,8 @@ async function defaultNodeCliHandler() {
 			const customNodeAddressAnswers = await processValidate(() => prompt(customNodeAddressQuestions, {onCancel: () => process.exit(0)}), async (answer) => {
 				const spinner = ora('Check node').start()
 				try {
-					const networkData = await fetch(`${answer['custom_node']}/status`).then(data => data.json());
-					chainId = networkData.result['node_info'].network;
+					const networkData = await axios.get(`${answer['custom_node']}/status`);
+					chainId = networkData.data.result['node_info'].network;
 					spinner.succeed('Network set successfully')
 					return true
 				}catch (e) {
