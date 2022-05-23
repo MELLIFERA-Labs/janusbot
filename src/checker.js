@@ -1,7 +1,6 @@
 const  {Worker, isMainThread, workerData: config} = require('node:worker_threads');
 const {Bot} = require('grammy') ;
 const constant = require('./constant.js') ;
-// const {fileURLToPath} = require('url') ;
 const {execFileSync} = require("node:child_process");
 const {createMessageFromProposal} = require('./utils.js');
 const os = require('os');
@@ -76,7 +75,10 @@ async function startCheckProposals() {
 			logger.info(`successfully state updated! proposal number changed: ${lastProp.proposal_id}`);
 		}
 	} catch (e) {
-		if (!e?.stderr?.includes('Error: no proposals found')) throw e;
+		if (!e?.stderr?.includes('Error: no proposals found')) {
+			logger.error(e);
+			return process.exit(1)
+		};
 	}
 	logger.info('end check')
 

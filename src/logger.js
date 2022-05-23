@@ -8,6 +8,7 @@ module.exports = function Logger(name) {
 			singleLine: true,
 			messageKey: 'msg',
 			ignore: 'pid,hostname',
+			sync: true
 		}
 		if (process.env.NODE_ENV === 'development') {
 			prettyConfig.colorize = true

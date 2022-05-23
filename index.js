@@ -20,11 +20,12 @@ const {Bot} = require('grammy');
 const Logger = require("./src/logger.js");
 const logger = Logger('cli-handlers')
 const program = new Command();
+const appInfo = require('./package.json')
 
 program
-	.name('janusbot')
-	.description('Bot for easy vote as a validator')
-	.version('0.0.1');
+	.name(appInfo.name)
+	.description(appInfo.description)
+	.version(appInfo.version);
 
 program.command('init')
 	.description('Initialize application configuration files')
@@ -82,9 +83,10 @@ program.command('start')
 		}
 		const appConfig = TOML.parse(fs.readFileSync(appFile, 'utf-8'));
 		const checker = startChecker(appConfig);
+		checker.on('error', logger.error)
 		checker.on('exit', (code) => {
 			if (code !== 0) {
-				console.error(code)
+				logger.error(`checker exit with status code: ${code}`)
 			}
 			process.exit(0)
 		});

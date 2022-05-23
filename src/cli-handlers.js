@@ -1,13 +1,11 @@
 const prompt = require("prompts");
-// const ora = require("ora");
+const ora = require("ora");
 const {execFileSync} = require("node:child_process");
 const { processValidate } = require('./utils.js')
 const constant = require('./constant.js')
 const {Bot} = require("grammy") ;
 
 async function binaryCliHandler() {
-	const ora = (await import('ora')).default
-	console.log(ora);
 	return  processValidate(() => prompt({
 		type: 'text',
 		name: 'binary',
@@ -28,8 +26,6 @@ async function binaryCliHandler() {
 }
 
 async function telegramCliHandler() {
-	const ora = (await import('ora')).default
-
 	const telegramQuestions = [
 		{
 			type: 'text',
@@ -60,8 +56,6 @@ async function telegramCliHandler() {
 }
 
 async function walletCliHandler(binary) {
-	const ora = (await import('ora')).default
-
 	const walletQuestions = [{
 		type: 'text',
 		name: 'wallet',
@@ -120,8 +114,6 @@ async function feeHandler() {
 	}
 }
 async function defaultNodeCliHandler() {
-	const ora = await import('ora')
-
 	const nodeDefaultQuestion = {
 		type: 'toggle',
 		name: 'default_node',
