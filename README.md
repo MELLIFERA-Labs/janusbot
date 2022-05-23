@@ -62,5 +62,10 @@ systemctl daemon-reload
  ```
    journalctl -u janusbot.service -f
  ```
+##SUPPORT US
+- COSMOS: `cosmos1qcual5kgmw3gqc9q22hlp0aluc3t7rnsprewgy`
+- JUNO: `juno1qcual5kgmw3gqc9q22hlp0aluc3t7rnsh3640c`
+- OSMOSIS: `osmo1qcual5kgmw3gqc9q22hlp0aluc3t7rnsfc277k`
 
-
+Also you can just delegate in one of our nodes : )
+https://mellifera.network
