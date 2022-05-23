@@ -1,1 +1,57 @@
 # janusbot
+Self hosted Bot to easy vote in cosmos ecosystem
+
+<img src="janus.jpeg" width="30%">
+
+## How to run a bot
+### Upload the latest release on your machine 
+For example:
+```
+wget https://github.com/MELLIFERA-Labs/janusbot/releases/download/v0.0.3/janusbot-linux-amd64
+```
+
+### Add binary to bin
+```
+ mv janusbot-linux-amd64 /usr/bin/janusbot 
+```
+### Setup app config
+```
+janusbot init
+```
+Fill all forms step by step as in example:
+
+<img src="fill_init_example.png" width="50%">
+
+### Setup service file 
+1. Create service file 
+```
+ tauch /etc/systemd/system/janusbot.service
+```
+2. Fill service file:
+```
+cat <<EOF >> /etc/systemd/system/odin.service
+[Unit]
+Description=Janusbot daemon
+After=network-online.target
+
+[Service]
+User=<USER>
+ExecStart=/usr/bin/janusbot start
+Restart=on-failure
+RestartSec=3
+LimitNOFILE=4096
+
+[Install]
+WantedBy=multi-user.target
+EOF
+```
+3. Reload systemctl 
+```
+systemctl daemon-reload
+```
+4. In order to watch the service run, you can do the following:
+ ```
+   journalctl -u janusbot.service -f
+ ```
+
+
