@@ -34,7 +34,7 @@ Fill all forms step by step as in example:
 ```
 2. Fill service file:
 ```
-cat <<EOF >> /etc/systemd/system/odin.service
+cat <<EOF >> /etc/systemd/system/janusbot.service
 [Unit]
 Description=Janusbot daemon
 After=network-online.target
@@ -53,6 +53,10 @@ EOF
 3. Reload systemctl 
 ```
 systemctl daemon-reload
+```
+4. Start service
+```
+ systemctl start janusbot.service
 ```
 4. In order to watch the service run, you can do the following:
  ```
