@@ -30,7 +30,7 @@ Fill all forms step by step as in example:
 ### Setup service file 
 1. Create service file 
 ```
- tauch /etc/systemd/system/janusbot.service
+ touch /etc/systemd/system/janusbot.service
 ```
 2. Fill service file:
 ```
