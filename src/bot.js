@@ -14,7 +14,7 @@ module.exports =  async function startBot(config) {
 	const key = fs.readFileSync(path.join(os.homedir(), constant.PATH_TO_SECRET_FILE), 'utf-8')
 	bot.on("callback_query:data", async (ctx) => {
 		const [id, type] = ctx.callbackQuery.data.split(':');
-		const feeParams = config.cosmos.fees === 'auto' ? ['--gas', 'auto'] : ['--fees', config.fees]
+		const feeParams = config.cosmos.fees === 'auto' ? ['--gas', 'auto'] : ['--fees', config.cosmos.fees]
 		execFileSync(config.cosmos.cosmos_binary,
 			[
 				'tx',

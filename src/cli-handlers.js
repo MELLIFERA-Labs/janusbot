@@ -149,10 +149,10 @@ async function defaultNodeCliHandler() {
 			chainId,
 		}
 	}
-	const nodeInfo = await fetch(`${constant.DEFAULT_NODE_ADDRESS}/status`).then(data => data.json())
+	const nodeInfo = await axios.get(`${constant.DEFAULT_NODE_ADDRESS}/status`);
 	return {
 		nodeAddress: constant.DEFAULT_NODE_ADDRESS,
-		chainId: nodeInfo.result['node_info'].network
+		chainId: nodeInfo.data.result['node_info'].network
 	}
 
 }

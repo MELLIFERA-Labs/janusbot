@@ -32,7 +32,6 @@
     "commander": "^9.2.0",
     "grammy": "^1.8.3",
     "human-interval": "^2.0.1",
-    "node-fetch": "^3.2.4",
     "ora": "^5.0.0",
     "pino": "^7.11.0",
     "pino-pretty": "^7.6.1",
