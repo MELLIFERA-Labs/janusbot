@@ -1,7 +1,12 @@
 # janusbot
 Self hosted Bot to easy vote in cosmos ecosystem
 
+
 <img src="janus.jpeg" width="30%">
+
+There is no need to vote via cli or web UI. just setup bot with your validator or wherever you want 
+and get notification with vote options  
+<img src="work_bot_example.png" width="30%">
 
 ## How to run a bot
 ### Upload the latest release on your machine 
