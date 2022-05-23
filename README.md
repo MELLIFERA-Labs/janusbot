@@ -67,5 +67,5 @@ systemctl daemon-reload
 - JUNO: `juno1qcual5kgmw3gqc9q22hlp0aluc3t7rnsh3640c`
 - OSMOSIS: `osmo1qcual5kgmw3gqc9q22hlp0aluc3t7rnsfc277k`
 
-Also you can just delegate in one of our nodes : )
+Also, you can just delegate in one of our nodes : )
 https://mellifera.network
