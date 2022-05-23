@@ -92,7 +92,7 @@ async function feeHandler() {
 			{ title: 'Gas auto', description: 'Trx fee will be calculated automatically', value: 'auto' },
 			{ title: 'Static fee', description: 'You need to enter static transaction fee (e.g 1uatom )', value: 'staticFee' },
 		],
-		initial: 1
+		initial: 0
 	}
 
 	const feeQuestion = {
