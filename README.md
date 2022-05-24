@@ -63,6 +63,7 @@ systemctl daemon-reload
    journalctl -u janusbot.service -f
  ```
 ### VIDEO GUIDES
+ - EN - https://www.youtube.com/watch?v=U3DSN1M8tQM
  - RU - https://www.youtube.com/watch?v=LDzwrBmEOS0
 ## SUPPORT US
 - COSMOS: `cosmos1qcual5kgmw3gqc9q22hlp0aluc3t7rnsprewgy`
