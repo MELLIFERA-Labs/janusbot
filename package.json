@@ -1,12 +1,9 @@
 {
   "name": "janusbot",
-  "version": "0.0.3",
+  "version": "1.0.0",
   "description": "Self hosted Bot to easy vote in cosmos ecosystem",
-  "main": "index.js",
-  "bin": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "pkg ."
+    "lint": "eslint . --ext .ts"
   },
   "keywords": [
     "cosmos-ecosystem",
@@ -16,28 +13,34 @@
     "voting",
     "cosmos"
   ],
-  "pkg": {
-    "outputPath": "dist",
-    "targets": [
-      "node18-linux-x64",
-      "node18-macos-x64",
-      "node18-win-x64"
-    ]
-  },
   "author": "ruslan.glaznyov@gmail.com",
   "license": "MIT",
-  "dependencies": {
-    "@iarna/toml": "^2.2.5",
-    "axios": "^0.27.2",
-    "commander": "^9.2.0",
-    "grammy": "^1.8.3",
-    "human-interval": "^2.0.1",
-    "ora": "^5.0.0",
-    "pino": "^7.11.0",
-    "pino-pretty": "^7.6.1",
-    "prompts": "^2.4.2"
-  },
   "devDependencies": {
-    "pkg": "^5.7.0"
+    "@typescript-eslint/eslint-plugin": "^6.13.2",
+    "bun-types": "latest",
+    "eslint": "^8.55.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-config-standard-with-typescript": "^40.0.0",
+    "eslint-plugin-import": "^2.29.0",
+    "eslint-plugin-n": "^16.3.1",
+    "eslint-plugin-prettier": "^5.0.1",
+    "eslint-plugin-promise": "^6.1.1",
+    "prettier": "^3.1.0",
+    "typescript": "^5.3.3"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@cosmjs/crypto": "^0.32.1",
+    "@cosmjs/proto-signing": "^0.32.1",
+    "@cosmjs/stargate": "^0.32.1",
+    "@cosmjs/tendermint-rpc": "^0.32.1",
+    "@inquirer/confirm": "^2.0.15",
+    "@inquirer/password": "^1.1.14",
+    "ajv": "^8.12.0",
+    "commander": "^11.1.0",
+    "grammy": "^1.19.2",
+    "toml": "^3.0.0"
   }
 }
