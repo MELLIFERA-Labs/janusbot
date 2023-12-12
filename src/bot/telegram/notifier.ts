@@ -1,22 +1,28 @@
-import { type NetworkService } from '../../services/network.service'
+import { type KeyWithClient } from '../../services/network.service'
 import { Bot } from 'grammy'
+import { createStartVoteBtn } from './iline-menu/vote/menu/start-vote.menu'
+import { type Notifier } from '../common/notifier'
 
 interface TelegramConfig {
   BOT_TOKEN: string
   BOT_CHAT_ID: string
 }
 
-export class TelegramNotifier {
-  networkService: NetworkService
+export class TelegramNotifier implements Notifier {
+  keysWithClient: KeyWithClient[]
   config: TelegramConfig
   bot: Bot
-  constructor(config: TelegramConfig, networkService: NetworkService) {
+  public type: string = 'telegram'
+  constructor(config: TelegramConfig, keysWithClient: KeyWithClient[]) {
     this.config = config
-    this.networkService = networkService
+    this.keysWithClient = keysWithClient
     this.bot = new Bot(config.BOT_TOKEN)
   }
 
   async sendMessage(message: string): Promise<void> {
-    await this.bot.api.sendMessage(this.config.BOT_CHAT_ID, 'test')
+    await this.bot.api.sendMessage(this.config.BOT_CHAT_ID, message, {
+      reply_markup: createStartVoteBtn(),
+      parse_mode: 'HTML',
+    })
   }
 }

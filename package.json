@@ -2,6 +2,7 @@
   "name": "janusbot",
   "version": "1.0.0",
   "description": "Self hosted Bot to easy vote in cosmos ecosystem",
+  "type": "module",
   "scripts": {
     "lint": "eslint . --ext .ts"
   },
@@ -41,6 +42,7 @@
     "ajv": "^8.12.0",
     "commander": "^11.1.0",
     "grammy": "^1.19.2",
+    "lowdb": "^6.1.1",
     "toml": "^3.0.0"
   }
 }

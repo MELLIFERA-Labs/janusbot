@@ -5,6 +5,7 @@ const homeDirectory = os.homedir()
 export const BASE_DIR_DEFAULT = path.join(homeDirectory, '.janus')
 export const CONFIG_FILE_NAME = 'config.toml'
 export const KEYS_FOLDER = 'keys'
+export const DB_FOLDER = 'db'
 export const CONFIG_FILE_DEFAULT_CONTENT = `
 # transports configuration
 [[transport]]

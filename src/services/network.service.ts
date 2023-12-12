@@ -10,14 +10,19 @@ import type ConfigType from '../types/config'
 import { BASE_DIR_DEFAULT, KEYS_FOLDER } from '../constants'
 import path from 'path'
 import fs from 'fs'
+import { type Notifier } from '../bot/common/notifier'
+import { TelegramNotifier } from '../bot/telegram/notifier'
+
 const pathToKeys = path.join(BASE_DIR_DEFAULT, KEYS_FOLDER)
+export interface KeyWithClient {
+  key: string
+  cosmClient: SigningStargateClient
+}
 export interface NetworkService {
-  keys: Array<{
-    key: string
-    cosmClient: SigningStargateClient
-    queryClient: QueryClient & GovExtension
-  }>
-  sendByTransport: (message: string) => Promise<void>
+  networkKey: string
+  queryClient: QueryClient & GovExtension
+  keys: KeyWithClient[]
+  notifier: Notifier
 }
 
 export const createNetworkProvider = async (
@@ -48,13 +53,22 @@ export const createNetworkProvider = async (
               net.net.rpc[0],
               signer,
             ),
-            queryClient: query,
           }
         }),
       )
+      const transport = config.transport.find((t) => t.key === net.transport)
+      if (!transport) throw new Error(`Transport ${net.transport} not found`)
       return {
+        networkKey: net.key,
         keys: keysWithClients,
-        async sendByTransport(message: string): Promise<void> {},
+        queryClient: query,
+        notifier: new TelegramNotifier(
+          {
+            BOT_TOKEN: transport['bot-token'],
+            BOT_CHAT_ID: transport['chat-id'],
+          },
+          keysWithClients,
+        ),
       }
     }),
   )

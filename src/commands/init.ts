@@ -5,6 +5,7 @@ import {
   CONFIG_FILE_DEFAULT_CONTENT,
   CONFIG_FILE_NAME,
   KEYS_FOLDER,
+  DB_FOLDER,
 } from '../constants'
 
 const createFolderIfNotExists = (path: string): void => {
@@ -23,8 +24,10 @@ export default async (): Promise<void> => {
   console.log(
     `Created base config file "${BASE_DIR_DEFAULT}/${CONFIG_FILE_NAME}" for Janus`,
   )
+  createFolderIfNotExists(`${BASE_DIR_DEFAULT}/${KEYS_FOLDER}`)
   console.log(
     `Created keys folder "${BASE_DIR_DEFAULT}/${KEYS_FOLDER}" for Janus`,
   )
-  createFolderIfNotExists(`${BASE_DIR_DEFAULT}/${KEYS_FOLDER}`)
+  createFolderIfNotExists(`${BASE_DIR_DEFAULT}/${DB_FOLDER}`)
+  console.log(`Created db forlder "${BASE_DIR_DEFAULT}/${DB_FOLDER}" for Janus`)
 }
