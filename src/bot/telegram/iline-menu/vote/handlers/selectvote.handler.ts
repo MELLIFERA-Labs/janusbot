@@ -1,44 +1,55 @@
 import { voteOptionFromJSON } from 'cosmjs-types/cosmos/gov/v1beta1/gov'
+import { convertOptionToVoteType } from '../../../../../utils'
 
 import { type CtxHandler } from '../../../iline'
-import cosmosRest from '../../../lib/cosmos-rest'
-import { convertOptionToVoteType, getUserIdFromCtx } from '../../../lib/helper'
 import { createSelectVote } from '../menu/selectvote.menu'
-import {
-  getGetSubsByUserIdAndNetwork,
-  getMessageById,
-} from '../services/resource'
+import { getJanusMessageEntity } from '../../../utils/stateless-text'
+
 
 export function selectVoteHandler() {
   return async (req: CtxHandler) => {
-    const msg = await getMessageById(req.ctx.msg?.message_id)
-    if (!msg) throw new Error('Message not found')
-    const subs = await getGetSubsByUserIdAndNetwork(
-      getUserIdFromCtx(req.ctx),
-      msg.network_key,
+    const networkKey = getJanusMessageEntity(req.ctx)
+    if (!networkKey) {
+      await req.ctx.resetWithText('Can not find network key')
+      return
+    }
+    const store = req.ctx.services.dbService.getStore(networkKey)
+    const message = store.data[`msg:${req!.ctx!.msg!.message_id}`]
+    if (!message) {
+      await req.ctx.resetWithText('Can not find message')
+      return
+    }
+    const networkService = req.ctx.services.networkServices.find(
+      (network) => network.networkKey === networkKey,
     )
-    if (!subs) {
-      await req.ctx.resetWithText('You have no subscriptions')
+    if (!networkService) {
+      await req.ctx.resetWithText('Can not find wallets')
       return
     }
-    const subWallet = subs.find((sub) => sub._id.toString() === req.data)
-    if (!subWallet) {
-      await req.ctx.resetWithText('Wallet not found')
+    console.log(networkService.keys)
+    console.log(message.networkKey)
+    const client = networkService.keys.find(
+      (k) => k.key === req.data
+    )
+    if (!client) {
+      await req.ctx.resetWithText('Can not find client')
       return
     }
-    const voted = await cosmosRest.restClient
-      .getClient(msg.network_key)
-      .vote(msg.proposal_id, subWallet.network_address)
-      .catch((e) => {
-        if (e?.response?.data?.message?.includes('not found for proposal'))
-          return null
-        throw e
-      })
+    // const address = await client.cosmClient.
+    const voted = await networkService.queryClient.gov.vote(
+      Number(message.proposalId),
+      client.address,
+    ).catch(e => {
+        if (e.message.includes('not found for proposal'))
+          return null;
+        throw e;
+    });
+    // todo: use options insted of option 
     const select = convertOptionToVoteType(
       voteOptionFromJSON(voted?.vote?.option),
-    )
+    );
     await req.ctx.editMessageReplyMarkup({
-      reply_markup: createSelectVote(req.ctx, select, subWallet._id.toString()),
-    })
+      reply_markup: createSelectVote(req.ctx, select, client.key),
+    });
   }
 }

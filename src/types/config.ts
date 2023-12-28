@@ -1,4 +1,4 @@
-interface Network {
+export interface Network {
   key: string
   'chain-id': string
   'hd-path': string
@@ -6,21 +6,25 @@ interface Network {
   denom: string
   'wallet-key': string[]
   transport: string
+  decimals: number
+  explorer?: {
+    proposal?: string,
+    trx?: string
+  }
   net: {
     rpc: string[]
   }
 }
 
-interface Transport {
+export interface Transport {
   key: string
   type: string
   'bot-token': string
   'chat-id': string
 }
 
-interface Config {
+export interface Config {
   transport: Transport[]
   network: Network[]
 }
 
-export default Config

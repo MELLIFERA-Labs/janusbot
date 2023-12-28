@@ -1,5 +1,5 @@
 import { type InlineKeyboardMarkup } from '@grammyjs/types/markup'
-import { type Context as AppContext } from 'grammy'
+import { AppContext } from '../bot'
 export const DELIMITER = '%'
 interface ActionMenuMethods {
   reset: () => Promise<void>
@@ -94,16 +94,15 @@ class Index {
 
     if (typeAction.preRequest) {
       const result = await compose(
-        Proxy,
         typeAction.preRequest,
         typeAction.actions[action],
       )()
       await result(execObj)
       return true
     }
-
     // eslint-disable-next-line @typescript-eslint/await-thenable
     const res = await typeAction.actions[action]
+
     await res()(execObj)
     return true
   }

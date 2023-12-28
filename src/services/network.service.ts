@@ -6,7 +6,7 @@ import {
 } from '@cosmjs/stargate'
 import { DirectSecp256k1HdWallet } from '@cosmjs/proto-signing'
 import { Tendermint34Client } from '@cosmjs/tendermint-rpc'
-import type ConfigType from '../types/config'
+import { Config as ConfigType, Network as NetworkConfig} from '../types/config'
 import { BASE_DIR_DEFAULT, KEYS_FOLDER } from '../constants'
 import path from 'path'
 import fs from 'fs'
@@ -16,6 +16,7 @@ import { TelegramNotifier } from '../bot/telegram/notifier'
 const pathToKeys = path.join(BASE_DIR_DEFAULT, KEYS_FOLDER)
 export interface KeyWithClient {
   key: string
+  address: string
   cosmClient: SigningStargateClient
 }
 export interface NetworkService {
@@ -23,6 +24,7 @@ export interface NetworkService {
   queryClient: QueryClient & GovExtension
   keys: KeyWithClient[]
   notifier: Notifier
+  networkConfig: NetworkConfig
 }
 
 export const createNetworkProvider = async (
@@ -30,6 +32,7 @@ export const createNetworkProvider = async (
 ): Promise<NetworkService[]> => {
   const networkService = await Promise.all(
     config.network.map(async (net) => {
+      // toodo: reconnect client by array of rpc
       const tendermintClient = await Tendermint34Client.connect(net.net.rpc[0])
       const query = QueryClient.withExtensions(
         tendermintClient,
@@ -47,8 +50,10 @@ export const createNetworkProvider = async (
               prefix: net.prefix,
             },
           )
+         const accounts = await signer.getAccounts()
           return {
             key: w,
+            address: accounts[0].address,
             cosmClient: await SigningStargateClient.connectWithSigner(
               net.net.rpc[0],
               signer,
@@ -62,9 +67,9 @@ export const createNetworkProvider = async (
         networkKey: net.key,
         keys: keysWithClients,
         queryClient: query,
+        networkConfig: net,
         notifier: new TelegramNotifier(
           {
-            BOT_TOKEN: transport['bot-token'],
             BOT_CHAT_ID: transport['chat-id'],
           },
           keysWithClients,

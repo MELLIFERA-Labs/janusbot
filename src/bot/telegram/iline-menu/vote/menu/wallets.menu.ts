@@ -4,14 +4,14 @@ import { type ActionMenuCtx } from '../../../iline'
 
 export function createWalletMenu(
   ctx: ActionMenuCtx,
-  data: Array<{ name: string; _id: string }>,
+  data: Array<string>,
 ): InlineKeyboard {
   const walletMenu = new InlineKeyboard()
-  data.forEach((dataWallet) => {
+  data.forEach((walletKey) => {
     walletMenu
       .text(
-        `Vote as: ${dataWallet.name}`,
-        ctx.registerMenuData('select', dataWallet._id),
+        `Vote as: ${walletKey}`,
+        ctx.registerMenuData('select', walletKey),
       )
       .row()
   })

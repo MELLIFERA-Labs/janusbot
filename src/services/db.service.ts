@@ -4,10 +4,10 @@ import path from 'path'
 interface MsgEntity {
   networkKey: string
   proposalId: string
-  messageId: string
+  messageId: number
 }
 interface ProposalEntity {
-  messageId: string
+  messageId: number
 }
 interface DatabaseObjectType {
   [key: `net:${string}:${string}`]: ProposalEntity | undefined
