@@ -12,7 +12,9 @@ import path from 'path'
 import fs from 'fs'
 import { type Notifier } from '../bot/common/notifier'
 import { TelegramNotifier } from '../bot/telegram/notifier'
-
+import RpcReConnectClient from '../utils/rpc-reconnect-client';
+import logger from '../services/app-logger.service'
+const log = logger('services:network')
 const pathToKeys = path.join(BASE_DIR_DEFAULT, KEYS_FOLDER)
 export interface KeyWithClient {
   key: string
@@ -32,8 +34,10 @@ export const createNetworkProvider = async (
 ): Promise<NetworkService[]> => {
   const networkService = await Promise.all(
     config.network.map(async (net) => {
-      // toodo: reconnect client by array of rpc
-      const tendermintClient = await Tendermint34Client.connect(net.net.rpc[0])
+       const rpcClient = new RpcReConnectClient(net.net.rpc);
+      rpcClient.on('info', data => log.info({ data, tag: 'sign' }, 'made rpc call'))
+      rpcClient.on('warning', data => log.warn({ data, tag: 'sign' }, 'failed rpc call before reconnect'))
+      const tendermintClient = await Tendermint34Client.create(rpcClient);  
       const query = QueryClient.withExtensions(
         tendermintClient,
         setupGovExtension,
@@ -50,12 +54,12 @@ export const createNetworkProvider = async (
               prefix: net.prefix,
             },
           )
-         const accounts = await signer.getAccounts()
+          const accounts = await signer.getAccounts()
           return {
             key: w,
             address: accounts[0].address,
-            cosmClient: await SigningStargateClient.connectWithSigner(
-              net.net.rpc[0],
+            cosmClient: await SigningStargateClient.createWithSigner(
+              tendermintClient,
               signer,
             ),
           }

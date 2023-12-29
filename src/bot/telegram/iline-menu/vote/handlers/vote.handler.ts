@@ -7,7 +7,8 @@ import { getJanusMessageEntity } from '../../../utils/stateless-text'
 import { type CtxHandler } from '../../../iline'
 export const VOTE_TYPE_MSG = '/cosmos.gov.v1beta1.MsgVote';
 import { Network } from '../../../../../types/config'
-import { convertTypeToVote, gasEstimation, minGasPrice } from '../../../../../utils'
+import { convertTypeToVote } from '../../../../../utils/vote-convert'
+import { gasEstimation, minGasPrice } from '../../../../../utils/gas-estimation'
 
 export function voteHandler() {
   return async (req: CtxHandler) => {

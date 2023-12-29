@@ -1,5 +1,5 @@
 import { voteOptionFromJSON } from 'cosmjs-types/cosmos/gov/v1beta1/gov'
-import { convertOptionToVoteType } from '../../../../../utils'
+import { convertOptionToVoteType } from '../../../../../utils/vote-convert'
 
 import { type CtxHandler } from '../../../iline'
 import { createSelectVote } from '../menu/selectvote.menu'
@@ -26,8 +26,6 @@ export function selectVoteHandler() {
       await req.ctx.resetWithText('Can not find wallets')
       return
     }
-    console.log(networkService.keys)
-    console.log(message.networkKey)
     const client = networkService.keys.find(
       (k) => k.key === req.data
     )

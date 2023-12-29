@@ -4,7 +4,7 @@ import path from 'path'
 import fs from 'fs'
 import { validateProcessConfig } from '../../validate-config'
 import { createNetworkProvider } from '../../services/network.service'
-import { excuteWorker } from '../../bot/telegram/worker'
+import { startWoker } from '../../bot/telegram/worker'
 import { DbService } from '../../services/db.service'
 import {Config} from '../../types/config'
 import { startBot } from '../../bot/telegram/bot'
@@ -22,11 +22,11 @@ export default async (): Promise<void> => {
 
   const isValidProcess = await validateProcessConfig(config)
   if (!isValidProcess.isValid || !isValidProcess.config) {
-    throw new CommandError(isValidProcess.errors)
+    throw new CommandError(isValidProcess.errors ?? '' )
   }
   const networkServices = await createNetworkProvider(isValidProcess.config)
   
   await startBot(config, networkServices, dbService)
-  await excuteWorker(networkServices, dbService)
+  await startWoker(networkServices, dbService)
   
 }

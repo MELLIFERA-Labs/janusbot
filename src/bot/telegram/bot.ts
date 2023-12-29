@@ -26,7 +26,6 @@ export const startBot = async (config: Config, netoworkServices: NetworkService[
   
   // todo: add protection to process messages only from allowed users 
   bot.on('callback_query:data', async ctx => {
-    console.log(ctx?.callbackQuery.data)
     if (ctx?.callbackQuery.data)
       await iline.dispatchActionMenu(ctx, ctx.callbackQuery.data);
   });
