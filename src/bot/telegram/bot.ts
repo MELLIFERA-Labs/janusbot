@@ -3,7 +3,11 @@ import { type DbService } from '../../services/db.service'
 import { Context, Bot } from 'grammy'
 import { iline } from './iline'
 import { Config } from '../../types/config'
+import { GrammyError, HttpError } from 'grammy';
+import logger from '../../services/app-logger.service'
+import { createStartVoteBtn } from './iline-menu/vote/menu/start-vote.menu'
 import './iline-menu';
+const log = logger('bot:telegram:client')
 interface Services {
   networkServices: NetworkService[]
   dbService: DbService
@@ -29,5 +33,29 @@ export const startBot = async (config: Config, netoworkServices: NetworkService[
     if (ctx?.callbackQuery.data)
       await iline.dispatchActionMenu(ctx, ctx.callbackQuery.data);
   });
+
+  // error handler 
+  bot.catch(async err => {
+  const ctx = err.ctx;
+  const e = err.error;
+  log.error(e, `Error while handling update ${ctx.update.update_id}`);
+  if (e instanceof GrammyError) {
+    if (
+      e.message.includes(
+        "Call to 'editMessageReplyMarkup' failed! (400: Bad Request: message is not modified:",
+      )
+    )
+      return;
+    log.error(e, 'Error in request');
+  } else if (e instanceof HttpError) {
+    log.error(e, 'Could not contact Telegram');
+  } else {
+    log.error(e, 'Unknown error');
+  }
+
+  return ctx.editMessageReplyMarkup({
+    reply_markup: createStartVoteBtn(),
+  });
+});
   bot.start()
 }

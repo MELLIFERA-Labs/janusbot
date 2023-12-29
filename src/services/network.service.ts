@@ -13,6 +13,7 @@ import fs from 'fs'
 import { type Notifier } from '../bot/common/notifier'
 import { TelegramNotifier } from '../bot/telegram/notifier'
 import RpcReConnectClient from '../utils/rpc-reconnect-client';
+import { FsService } from './fs.service'
 import logger from '../services/app-logger.service'
 const log = logger('services:network')
 const pathToKeys = path.join(BASE_DIR_DEFAULT, KEYS_FOLDER)
@@ -32,6 +33,7 @@ export interface NetworkService {
 export const createNetworkProvider = async (
   config: ConfigType,
 ): Promise<NetworkService[]> => {
+  const fsService = new FsService(BASE_DIR_DEFAULT)
   const networkService = await Promise.all(
     config.network.map(async (net) => {
        const rpcClient = new RpcReConnectClient(net.net.rpc);
@@ -44,10 +46,7 @@ export const createNetworkProvider = async (
       )
       const keysWithClients = await Promise.all(
         net['wallet-key'].map(async (w) => {
-          // todo: create help function getWallet
-          const wallet = JSON.parse(
-            fs.readFileSync(path.join(pathToKeys, `${w}.json`), 'utf8'),
-          )
+          const wallet = fsService.readKeyData(w)
           const signer = await DirectSecp256k1HdWallet.fromMnemonic(
             wallet.mnemonic,
             {

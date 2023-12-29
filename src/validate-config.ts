@@ -14,10 +14,9 @@ const configSchema = {
         properties: {
           key: { type: 'string', pattern: '^[a-zA-Z0-9_-]+$' },
           type: { type: 'string' },
-          'bot-token': { type: 'string' },
           'chat-id': { type: 'string' },
         },
-        required: ['key', 'type', 'bot-token', 'chat-id'],
+        required: ['key', 'type', 'chat-id'],
       },
       minItems: 1, // Ensure at least one element in the array
     },
@@ -143,22 +142,13 @@ export const validateProcessConfig = async (
   }
   // 2. check that transport env vars  exists in env
   for (const transport of config.transport) {
-    const chatId = transport['chat-id'].replace('env.', '')
-    if (process.env[chatId] === undefined) {
-      return {
-        isValid: false,
-        errors: `Transport "${transport.key}" has chat-id "${chatId}", but env var "${chatId}" not found`,
-        config: null
-      }
-    }
-    if(process.env[TELEGRAM_TOKEN_ENV] === undefined) {
+    if(transport.type === 'telegram' && process.env[TELEGRAM_TOKEN_ENV] === undefined) {
       return {
         isValid: false,
         errors: `Transport "${transport.key}" exists, but env var "${TELEGRAM_TOKEN_ENV}" not found`,
         config: null
      }
     }
-    transport['chat-id'] = process.env[chatId] as string
   }
   // 5. Check transport
   return {

@@ -24,6 +24,7 @@ export interface Transport {
 }
 
 export interface Config {
+  dotenv?: string
   transport: Transport[]
   network: Network[]
 }

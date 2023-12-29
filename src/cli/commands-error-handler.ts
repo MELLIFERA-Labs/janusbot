@@ -7,7 +7,7 @@ const commandsErrorHanlder = (error: Error): void => {
     return process.exit(1)
   }
   console.error(error)
-  process.exit(1)
+  return process.exit(1)
 }
 
 export const commandRunner =

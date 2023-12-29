@@ -1,14 +1,11 @@
 import { type StdFee } from '@cosmjs/amino/build/signdoc'
-import {
-  ProposalStatus,
-  proposalStatusFromJSON,
-} from 'cosmjs-types/cosmos/gov/v1beta1/gov'
 import { getJanusMessageEntity } from '../../../utils/stateless-text'
 import { type CtxHandler } from '../../../iline'
 export const VOTE_TYPE_MSG = '/cosmos.gov.v1beta1.MsgVote';
 import { Network } from '../../../../../types/config'
 import { convertTypeToVote } from '../../../../../utils/vote-convert'
 import { gasEstimation, minGasPrice } from '../../../../../utils/gas-estimation'
+import { DeliverTxResponse } from '@cosmjs/stargate';
 
 export function voteHandler() {
   return async (req: CtxHandler) => {
@@ -47,10 +44,11 @@ export function voteHandler() {
         voter: client.address
       }
     }
+
     async function getFeeNetwork(address: string, netoworConfig: Network): Promise<StdFee> {
       const fee = await gasEstimation(
-       client!.cosmClient,
-       address,
+        client!.cosmClient,
+        address,
         [voteTrx],
         minGasPrice({
           denom: netoworConfig.denom,
@@ -58,17 +56,26 @@ export function voteHandler() {
         }),
       );
       return {
-          amount: fee.amount,
-          gas: fee.gas,
+        amount: fee.amount,
+        gas: fee.gas,
       };
     }
-    const fee = await getFeeNetwork(client.address, networkService.networkConfig);
+    let fee: StdFee
+    try {
+        fee = await getFeeNetwork(client.address, networkService.networkConfig);
+    } catch (e: any) {
+      if (e?.message?.includes('inactive proposal')) {
+        await req.ctx.resetWithText('Proposal is inactive')
+        return
+      }
+      throw e;
+    }
     const result = await client.cosmClient.signAndBroadcast(client.address, [voteTrx], fee)
     const voteResult = networkService.networkConfig.explorer?.trx ? 
-    networkService.networkConfig.explorer?.trx.replace(':hash', result.transactionHash)
-    : result.transactionHash
+      networkService.networkConfig.explorer?.trx.replace(':hash', result.transactionHash)
+      : result.transactionHash
     
-  await req.ctx.reply(`NetworkKey: ${networkKey}\nProposalId: ${message.proposalId}\nVote: ${voteType}\nWallet: ${walletId}\nVote result: ${voteResult}`)
-  await req.ctx.reset()    
- }
+    await req.ctx.reply(`NetworkKey: ${networkKey}\nProposalId: ${message.proposalId}\nVote: ${voteType}\nWallet: ${walletId}\nVote result: ${voteResult}`)
+    await req.ctx.reset()    
+  }
 }
