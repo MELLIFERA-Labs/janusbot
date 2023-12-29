@@ -7,7 +7,7 @@ export const CONFIG_FILE_NAME = 'config.toml'
 export const KEYS_FOLDER = 'keys'
 export const DB_FOLDER = 'db'
 export const TELEGRAM_TOKEN_ENV = 'TELEGRAM_BOT_TOKEN'
-export const WORKER_INTERVAL = 60 * 1000 // 1 minute
+export const WORKER_INTERVAL = 60 * 1000 * 5 // 5 min
 export const CONFIG_FILE_DEFAULT_CONTENT = `
 # transports configuration
 [[transport]]
