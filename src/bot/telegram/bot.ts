@@ -6,7 +6,9 @@ import { Config } from '../../types/config'
 import { GrammyError, HttpError } from 'grammy';
 import logger from '../../services/app-logger.service'
 import { createStartVoteBtn } from './iline-menu/vote/menu/start-vote.menu'
+import { autoRetry } from "@grammyjs/auto-retry";
 import './iline-menu';
+
 const log = logger('bot:telegram:client')
 interface Services {
   networkServices: NetworkService[]
@@ -18,6 +20,7 @@ export type AppContext = Context & {
 }
 export const startBot = async (config: Config, netoworkServices: NetworkService[], dbService: DbService): Promise<void> => {
   const bot = new Bot<AppContext>(process.env.TELEGRAM_BOT_TOKEN || '');
+  bot.api.config.use(autoRetry());
   // set services 
   bot.use(async (ctx, next) => {
     ctx.services = {

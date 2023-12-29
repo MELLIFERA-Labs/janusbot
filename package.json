@@ -40,6 +40,7 @@
     "@cosmjs/proto-signing": "^0.32.1",
     "@cosmjs/stargate": "^0.32.1",
     "@cosmjs/tendermint-rpc": "^0.32.1",
+    "@grammyjs/auto-retry": "^1.1.1",
     "@inquirer/confirm": "^2.0.15",
     "@inquirer/password": "^1.1.14",
     "ajv": "^8.12.0",
