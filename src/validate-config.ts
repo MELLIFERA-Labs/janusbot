@@ -4,6 +4,11 @@ import { BASE_DIR_DEFAULT, KEYS_FOLDER, TELEGRAM_TOKEN_ENV } from './constants'
 import { FsService } from './services/fs.service'
 import path from 'path'
 import fs from 'fs'
+import { urlResolve } from './utils/helper'
+import { fetchWithTimeout } from './utils/helper'
+import cliLogService from './services/cli-log.service'
+import { RPCStatusResponse } from './types/rpc'
+
 const configSchema = {
   type: 'object',
   properties: {
@@ -111,15 +116,37 @@ export const validateProcessConfig = async (
   for (const network of config.network) {
     const rpc = network.net.rpc
     const chainId = network['chain-id']
+    let failedRequests = 0
     for (const rpcUrl of rpc) {
-      const statusRPC = new URL('/status', rpcUrl).href
-      const response = await fetch(statusRPC)
-      const data = (await response.json()) as RPCStatusResponse
-      if (Boolean(data.result) && data.result.node_info.network !== chainId) {
-        return {
-          isValid: false,
-          errors: `Network "${network.key}" has chain id "${chainId}", but rpc "${rpcUrl}" has chain id "${data.result.node_info.network}"`,
-          config: null,
+      const statusRPC = urlResolve(rpcUrl, '/status')
+      let data: RPCStatusResponse
+      try {
+        const response = await fetchWithTimeout(statusRPC)
+        data = (await response.json()) as RPCStatusResponse
+        if (Boolean(data.result) && data.result.node_info.network !== chainId) {
+          return {
+            isValid: false,
+            errors: `Network "${network.key}" has chain id "${chainId}", but rpc "${rpcUrl}" has chain id "${data.result.node_info.network}"`,
+            config: null,
+          }
+        }
+      } catch (error) {
+        failedRequests++
+        if (failedRequests === rpc.length) {
+          return {
+            isValid: false,
+            errors: `All rpc requests failed for network "${network.key}"`,
+            config: null,
+          }
+        }
+        if ((error as Error).name === 'AbortError') {
+          cliLogService.warn(`Request to ${statusRPC} timeout`)
+        } else {
+          cliLogService.warn(
+            `Request to ${statusRPC} failed with error "${
+              (error as Error).message
+            }"`,
+          )
         }
       }
     }

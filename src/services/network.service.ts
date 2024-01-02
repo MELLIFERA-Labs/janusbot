@@ -5,15 +5,22 @@ import {
   type GovExtension,
 } from '@cosmjs/stargate'
 import { DirectSecp256k1HdWallet } from '@cosmjs/proto-signing'
-import { Tendermint34Client } from '@cosmjs/tendermint-rpc'
+import {
+  Tendermint34Client,
+  Tendermint37Client,
+  Comet38Client,
+} from '@cosmjs/tendermint-rpc'
 import { Config as ConfigType, Network as NetworkConfig } from '../types/config'
 import { BASE_DIR_DEFAULT } from '../constants'
 import { type Notifier } from '../bot/common/notifier'
 import { TelegramNotifier } from '../bot/telegram/notifier'
 import RpcReConnectClient from '../utils/rpc-reconnect-client'
 import { FsService } from './fs.service'
+import { fetchWithTimeout, urlResolve } from '../utils/helper'
+import { RPCStatusResponse } from '../types/rpc'
 import logger from '../services/app-logger.service'
 const log = logger('services:network')
+
 export interface KeyWithClient {
   key: string
   address: string
@@ -26,7 +33,28 @@ export interface NetworkService {
   notifier: Notifier
   networkConfig: NetworkConfig
 }
+const getCometClient = async (rpc: string[]) => {
+  const versionFromRPC = await (async () => {
+    for (const rpcUrl of rpc) {
+      try {
+        const response = await fetchWithTimeout(urlResolve(rpcUrl, '/status'))
+        const data = (await response.json()) as RPCStatusResponse
+        return data.result.node_info.version
+      } catch (error) {
+        log.error(error)
+      }
+    }
+    throw new Error('No one rpc is available')
+  })()
 
+  if (versionFromRPC.startsWith('0.37.')) {
+    return Tendermint37Client
+  } else if (versionFromRPC.startsWith('0.38.')) {
+    return Comet38Client
+  } else {
+    return Tendermint34Client
+  }
+}
 export const createNetworkProvider = async (
   config: ConfigType,
 ): Promise<NetworkService[]> => {
@@ -40,7 +68,8 @@ export const createNetworkProvider = async (
       rpcClient.on('warning', (data) =>
         log.warn({ data, tag: 'sign' }, 'failed rpc call before reconnect'),
       )
-      const tendermintClient = await Tendermint34Client.create(rpcClient)
+      const CommetClient = await getCometClient(net.net.rpc)
+      const tendermintClient = await CommetClient.create(rpcClient)
       const query = QueryClient.withExtensions(
         tendermintClient,
         setupGovExtension,
