@@ -3,18 +3,17 @@ import { KEYS_FOLDER, BASE_DIR_DEFAULT } from '../../constants'
 import password from '@inquirer/password'
 import confirm from '@inquirer/confirm'
 import path from 'path'
-import fs from 'fs'
 import { EnglishMnemonic } from '@cosmjs/crypto'
 import cliLog from '../../services/cli-log.service'
 import { FsService } from '../../services/fs.service'
 
-const writeIfNotExists = (path: string, data: string): boolean => {
-  if (!fs.existsSync(path)) {
-    fs.writeFileSync(path, data)
-    return true
-  }
-  return false
-}
+// const writeIfNotExists = (path: string, data: string): boolean => {
+//   if (!fs.existsSync(path)) {
+//     fs.writeFileSync(path, data)
+//     return true
+//   }
+//   return false
+// }
 
 export const addKeys = async (
   key: string,
@@ -35,9 +34,9 @@ export const addKeys = async (
   }
   const { mnemonic } = await DirectSecp256k1HdWallet.generate(24)
   fsService.createKeyRecord(key, {
-      key: key.trim(),
-     mnemonic
-    })
+    key: key.trim(),
+    mnemonic,
+  })
 }
 
 export const deleteKey = async (key: string): Promise<void> => {
@@ -62,7 +61,7 @@ export const showKey = async (key: string): Promise<void> => {
 export const listKeys = async (): Promise<void> => {
   const pathToKeys = path.join(BASE_DIR_DEFAULT, KEYS_FOLDER)
   FsService.checkInitFolder(pathToKeys)
-   const fsService = new FsService(BASE_DIR_DEFAULT)
+  const fsService = new FsService(BASE_DIR_DEFAULT)
   const keys = fsService.readAllKeys()
   keys.forEach((key, index) => {
     cliLog.info(`${index + 1}. ${key}`)

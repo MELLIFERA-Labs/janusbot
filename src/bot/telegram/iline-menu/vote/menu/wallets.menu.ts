@@ -9,10 +9,7 @@ export function createWalletMenu(
   const walletMenu = new InlineKeyboard()
   data.forEach((walletKey) => {
     walletMenu
-      .text(
-        `Vote as: ${walletKey}`,
-        ctx.registerMenuData('select', walletKey),
-      )
+      .text(`Vote as: ${walletKey}`, ctx.registerMenuData('select', walletKey))
       .row()
   })
   walletMenu.text('cancel', ctx.registerMenuData('reset'))

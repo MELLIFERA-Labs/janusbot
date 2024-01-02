@@ -6,7 +6,9 @@
   "main": "src/cli/index.ts",
   "scripts": {
     "lint": "eslint . --ext .ts",
-    "cli": "bun run src/cli/index.ts"
+    "cli": "bun run src/cli/index.ts",
+    "format": "prettier --write src/**/*.ts",
+    "lint:fix": "eslint . --ext .ts --fix"
   },
   "keywords": [
     "cosmos-ecosystem",
@@ -19,7 +21,8 @@
   "author": "ruslan.glaznyov@gmail.com",
   "license": "MIT",
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^6.13.2",
+    "@typescript-eslint/eslint-plugin": "^6.16.0",
+    "@typescript-eslint/parser": "^6.16.0",
     "bun-types": "latest",
     "eslint": "^8.55.0",
     "eslint-config-prettier": "^9.1.0",

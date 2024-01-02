@@ -3,9 +3,8 @@ import { createWalletMenu } from '../menu/wallets.menu'
 import { getJanusMessageEntity } from '../../../utils/stateless-text'
 export function walletHandler() {
   return async (req: CtxHandler) => {
-
     const networkKey = getJanusMessageEntity(req.ctx)
-  
+
     if (!networkKey) {
       await req.ctx.resetWithText('Can not find network key')
       return
@@ -16,16 +15,16 @@ export function walletHandler() {
       await req.ctx.resetWithText('Can not find message')
       return
     }
-    const networkService  = req.ctx.services.networkServices.find(
+    const networkService = req.ctx.services.networkServices.find(
       (network) => network.networkKey === networkKey,
     )
     if (!networkService) {
       await req.ctx.resetWithText('Can not find wallets')
       return
     }
-  
-    const walletKyes = networkService.keys.map((k) => k.key) 
-  
+
+    const walletKyes = networkService.keys.map((k) => k.key)
+
     await req.ctx.editMessageReplyMarkup({
       reply_markup: createWalletMenu(req.ctx, walletKyes),
     })
