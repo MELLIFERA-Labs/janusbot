@@ -7,7 +7,7 @@
   "scripts": {
     "lint": "eslint . --ext .ts",
     "cli": "bun run src/cli/index.ts",
-    "format": "prettier --write .",
+    "format": "prettier --write src/**/*.ts",
     "lint:fix": "eslint . --ext .ts --fix"
   },
   "keywords": [
