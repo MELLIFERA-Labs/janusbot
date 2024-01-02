@@ -1,4 +1,4 @@
-import chalk from "chalk"
+import chalk from 'chalk'
 
 export default {
   error: (message: string) => {
@@ -8,9 +8,9 @@ export default {
     console.log(`${chalk.green('success: ')}${message}`)
   },
   warn: (message: string) => {
-   console.log(`${chalk.yellow('warn: ')}${message}`)
+    console.log(`${chalk.yellow('warn: ')}${message}`)
   },
   info: (message: string) => {
     console.log(`${chalk.cyan(message)}`)
-  }
+  },
 }

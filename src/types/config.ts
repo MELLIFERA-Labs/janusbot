@@ -8,7 +8,7 @@ export interface Network {
   transport: string
   decimals: number
   explorer?: {
-    proposal?: string,
+    proposal?: string
     trx?: string
   }
   net: {
@@ -28,4 +28,3 @@ export interface Config {
   transport: Transport[]
   network: Network[]
 }
-

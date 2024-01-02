@@ -1,17 +1,16 @@
-import { Proposal } from 'cosmjs-types/cosmos/gov/v1beta1/gov';
-import { suffixJanusStatelessHTML } from '../utils/stateless-text';
-const voteUrlConstruct = (voteUrl: string, proposalId: string) =>  `<a href="${voteUrl
-    .replace(
-      ':id',
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      //@ts-ignore
-      proposalId,
-    )}">Link to full proposal</a>`;
+import { suffixJanusStatelessHTML } from '../utils/stateless-text'
+const voteUrlConstruct = (voteUrl: string, proposalId: string) =>
+  `<a href="${voteUrl.replace(
+    ':id',
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    //@ts-ignore
+    proposalId,
+  )}">Link to full proposal</a>`
 export function createMessageFromProposal(
   proposal: {
-    title: string,
-    proposalId: string,
-    votingStartTime: string,
+    title: string
+    proposalId: string
+    votingStartTime: string
     votingEndTime: string
   },
   network: string,
@@ -19,9 +18,7 @@ export function createMessageFromProposal(
 ): string {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  return `New proposal #${
-    proposal?.proposalId
-  } in <b>${network}</b> \n\n  <b>\n${
+  return `New proposal #${proposal?.proposalId} in <b>${network}</b> \n\n  <b>\n${
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     //@ts-ignore
     proposal.title
@@ -33,7 +30,7 @@ export function createMessageFromProposal(
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     //@ts-ignore
     proposal.votingEndTime.split('T')[0]
-  } \n\n${voteUrl ? voteUrlConstruct(voteUrl, proposal.proposalId) : '' }${suffixJanusStatelessHTML(network)}`
-
+  } \n\n${
+    voteUrl ? voteUrlConstruct(voteUrl, proposal.proposalId) : ''
+  }${suffixJanusStatelessHTML(network)}`
 }
-

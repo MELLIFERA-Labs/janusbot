@@ -29,10 +29,11 @@ interface ActionMenu {
   >
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function compose(...fns: any[]) {
-  return async (x?: any) => {
+  return async (x?: unknown) => {
     return fns.reduceRight(async (functionInPromise, f) => {
-      return f(async (ctx: any) => {
+      return f(async (ctx: CtxHandler) => {
         if (!ctx) {
           throw new Error('Compose error: ctx is not defined')
         }

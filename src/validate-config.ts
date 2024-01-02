@@ -1,5 +1,5 @@
 import Ajv from 'ajv'
-import {Config as ConfigType} from './types/config'
+import { Config as ConfigType } from './types/config'
 import { BASE_DIR_DEFAULT, KEYS_FOLDER, TELEGRAM_TOKEN_ENV } from './constants'
 import { FsService } from './services/fs.service'
 import path from 'path'
@@ -59,7 +59,7 @@ const configSchema = {
           'net',
           'wallet-key',
           'transport',
-          'decimals'
+          'decimals',
         ],
       },
       minItems: 1, // Ensure at least one element in the array
@@ -89,6 +89,14 @@ export const validateConfig = (config: ConfigType): ValidateResponse => {
     errors: ajv.errorsText(),
   }
 }
+
+type RPCStatusResponse = {
+  result: {
+    node_info: {
+      network: string
+    }
+  }
+}
 export const validateProcessConfig = async (
   config: ConfigType,
 ): Promise<ValidateProcessResponse> => {
@@ -96,7 +104,7 @@ export const validateProcessConfig = async (
   if (!isValidConfig.isValid) {
     return {
       ...isValidConfig,
-      config: null
+      config: null,
     }
   }
   // 1. check that chaind id match with rpc
@@ -106,12 +114,12 @@ export const validateProcessConfig = async (
     for (const rpcUrl of rpc) {
       const statusRPC = new URL('/status', rpcUrl).href
       const response = await fetch(statusRPC)
-      const data = (await response.json()) as any
+      const data = (await response.json()) as RPCStatusResponse
       if (Boolean(data.result) && data.result.node_info.network !== chainId) {
         return {
           isValid: false,
           errors: `Network "${network.key}" has chain id "${chainId}", but rpc "${rpcUrl}" has chain id "${data.result.node_info.network}"`,
-          config: null
+          config: null,
         }
       }
     }
@@ -124,7 +132,7 @@ export const validateProcessConfig = async (
         return {
           isValid: false,
           errors: `Network "${network.key}" has wallet-key "${key}", but key "${key}" not found. You need add key "${key}" first`,
-          config: null
+          config: null,
         }
       }
     }
@@ -136,24 +144,27 @@ export const validateProcessConfig = async (
       return {
         isValid: false,
         errors: `Network "${network.key}" has transport "${network.transport}", but transport "${network.transport}" not found`,
-        config: null
+        config: null,
       }
     }
   }
   // 2. check that transport env vars  exists in env
   for (const transport of config.transport) {
-    if(transport.type === 'telegram' && process.env[TELEGRAM_TOKEN_ENV] === undefined) {
+    if (
+      transport.type === 'telegram' &&
+      process.env[TELEGRAM_TOKEN_ENV] === undefined
+    ) {
       return {
         isValid: false,
         errors: `Transport "${transport.key}" exists, but env var "${TELEGRAM_TOKEN_ENV}" not found`,
-        config: null
-     }
+        config: null,
+      }
     }
   }
   // 5. Check transport
   return {
     isValid: true,
     errors: null,
-    config: config
+    config: config,
   }
 }

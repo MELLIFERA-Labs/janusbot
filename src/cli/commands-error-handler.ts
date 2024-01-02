@@ -1,4 +1,4 @@
-import { CommandError } from "../errors"
+import { CommandError } from '../errors'
 import cliLog from '../services/cli-log.service'
 
 const commandsErrorHanlder = (error: Error): void => {
@@ -11,7 +11,7 @@ const commandsErrorHanlder = (error: Error): void => {
 }
 
 export const commandRunner =
-  (fn: (...args: any[]) => Promise<any>) =>
-  async (...args: any[]) => {
+  (fn: (...args: unknown[]) => Promise<unknown>) =>
+  async (...args: unknown[]) => {
     return await fn(...args).catch(commandsErrorHanlder)
   }

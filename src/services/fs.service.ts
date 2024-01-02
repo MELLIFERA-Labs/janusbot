@@ -1,14 +1,19 @@
 import fs from 'fs'
 import { join } from 'path'
 import { InitError, AlreadyExist } from '../errors'
-import { CONFIG_FILE_DEFAULT_CONTENT, CONFIG_FILE_NAME, DB_FOLDER, KEYS_FOLDER } from '../constants'
+import {
+  CONFIG_FILE_DEFAULT_CONTENT,
+  CONFIG_FILE_NAME,
+  DB_FOLDER,
+  KEYS_FOLDER,
+} from '../constants'
 import cliLog from './cli-log.service'
 import chalk from 'chalk'
 
 export class FsService {
-  public basePath: string;
+  public basePath: string
   constructor(path: string) {
-    this.basePath = path;
+    this.basePath = path
   }
   static createFolderIfNotExists(path: string): void {
     if (!fs.existsSync(path)) {
@@ -25,25 +30,34 @@ export class FsService {
   }
 
   createBaseConfigFile() {
-    this.createFileIfNotExists(join(this.basePath, CONFIG_FILE_NAME), CONFIG_FILE_DEFAULT_CONTENT)
+    this.createFileIfNotExists(
+      join(this.basePath, CONFIG_FILE_NAME),
+      CONFIG_FILE_DEFAULT_CONTENT,
+    )
     cliLog.success('Init base Config')
   }
 
-  createKeyRecord(key: string, keyData: {
-    mnemonic: string,
-    key: string
-  }) {
+  createKeyRecord(
+    key: string,
+    keyData: {
+      mnemonic: string
+      key: string
+    },
+  ) {
     const pathToKeys = join(this.basePath, KEYS_FOLDER)
     FsService.checkInitFolder(pathToKeys)
-    this.createFileIfNotExists(join(pathToKeys, `${key}.json`), JSON.stringify(keyData))
+    this.createFileIfNotExists(
+      join(pathToKeys, `${key}.json`),
+      JSON.stringify(keyData),
+    )
     cliLog.success(`created key "${chalk.blue.underline.bold(key)}"`)
   }
 
   removeKey(key: string) {
-    const pathToKeys =  join(this.basePath, KEYS_FOLDER)
+    const pathToKeys = join(this.basePath, KEYS_FOLDER)
     FsService.checkInitFolder(pathToKeys)
     const pathToKey = join(pathToKeys, `${key.trim()}.json`)
-   
+
     if (!fs.existsSync(pathToKey)) {
       cliLog.error(`key "${key}" not found`)
       return process.exit(1)
@@ -55,11 +69,11 @@ export class FsService {
   createFileIfNotExists(path: string, content: string): void {
     if (!fs.existsSync(path)) {
       fs.writeFileSync(path, content, 'utf8')
-      return;
+      return
     }
     throw new AlreadyExist(path)
   }
-  readKeyData(key: string): { key: string, mnemonic: string } {
+  readKeyData(key: string): { key: string; mnemonic: string } {
     const pathToKeys = join(this.basePath, KEYS_FOLDER)
     FsService.checkInitFolder(pathToKeys)
     const pathToKey = join(pathToKeys, `${key.trim()}.json`)
@@ -67,14 +81,17 @@ export class FsService {
       cliLog.error(`key "${key}" not found`)
       return process.exit(1)
     }
-    const keyData = JSON.parse(fs.readFileSync(pathToKey, 'utf-8')) as { key: string, mnemonic: string }
+    const keyData = JSON.parse(fs.readFileSync(pathToKey, 'utf-8')) as {
+      key: string
+      mnemonic: string
+    }
     return keyData
   }
 
   readAllKeys(): string[] {
     const pathToKey = join(this.basePath, KEYS_FOLDER)
     const keys = fs.readdirSync(pathToKey)
-    return keys.map(item => item.split('.')[0])
+    return keys.map((item) => item.split('.')[0])
   }
   static checkInitFolder(path: string): void {
     if (!fs.existsSync(path)) {
