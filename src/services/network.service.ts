@@ -19,6 +19,7 @@ import { FsService } from './fs.service'
 import { fetchWithTimeout, urlResolve } from '../utils/helper'
 import { RPCStatusResponse } from '../types/rpc'
 import logger from '../services/app-logger.service'
+import { stringToPath } from '@cosmjs/crypto'
 const log = logger('services:network')
 
 export interface KeyWithClient {
@@ -81,6 +82,7 @@ export const createNetworkProvider = async (
             wallet.mnemonic,
             {
               prefix: net.prefix,
+              hdPaths: [stringToPath(net['hd-path'])],
             },
           )
           const accounts = await signer.getAccounts()
