@@ -95,13 +95,6 @@ export const validateConfig = (config: ConfigType): ValidateResponse => {
   }
 }
 
-type RPCStatusResponse = {
-  result: {
-    node_info: {
-      network: string
-    }
-  }
-}
 export const validateProcessConfig = async (
   config: ConfigType,
 ): Promise<ValidateProcessResponse> => {

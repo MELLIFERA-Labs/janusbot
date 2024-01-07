@@ -10,8 +10,9 @@ const commandsErrorHanlder = (error: Error): void => {
   return process.exit(1)
 }
 
+type Args = [key: string, option: { recover?: boolean | undefined }]
 export const commandRunner =
-  (fn: (...args: unknown[]) => Promise<unknown>) =>
-  async (...args: unknown[]) => {
+  (fn: (...args: Args) => Promise<void>) =>
+  async (...args: Args) => {
     return await fn(...args).catch(commandsErrorHanlder)
   }

@@ -1,6 +1,6 @@
 import { Command } from 'commander'
 import appInfo from '../../package.json'
-import intiCommand from './commands/init'
+import initCommand from './commands/init'
 import { addKeys, deleteKey, listKeys, showKey } from './commands/keys'
 import runBot from './commands/run-bot'
 import { commandRunner } from './commands-error-handler'
@@ -14,7 +14,7 @@ program
 program
   .command('init')
   .description('Initialize application configuration files')
-  .action(commandRunner(intiCommand))
+  .action(commandRunner(initCommand))
 
 const keysCommand = program.command('keys')
 
