@@ -8,33 +8,61 @@ There is no need to vote via cli or web UI, just setup a bot with your validator
 
 <img src="work_bot_example.png" width="40%">
 
-## How to run a bot
-
-### Upload the latest release on your machine
-
-For example:
-
+# How to run a bot
+First download the latest release:
 ```
 wget https://github.com/MELLIFERA-Labs/janusbot/releases/download/v0.0.3/janusbot-linux-amd64
 ```
-
-### Add binary to bin
+## Initialize the bot:
+```
+janus init
+```
+## Verify it worked
 
 ```
- mv janusbot-linux-amd64 /usr/bin/janusbot
+cat $HOME/.janus/config.toml
 ```
 
-### Setup app config
+## Configure environment variables
+Set env variables, see `.env.example` or you can specify path to .env file, e.g. `dotenv = '/Home/.janus/.env'`.
+
+## Create telegram bot
+Open telegram and look for @BotFather, run command `/newbot` and follow instructions.
+In the end you should get token for your bot: something like `9999999:ASDjaiodsjioasoidj123123`.
+Set token environment variable, variable name is `TELEGRAM_BOT_TOKEN`, e.g: `TELEGRAM_BOT_TOKEN=9999999:ASDjaiodsjioasoidj123123`.
+
+## Retrieve chat_id 
+Now we need chat_id, so our bot knows where to send messages. It may be either group or private chat. In telegram look for `@username_to_id_bot`, or any other way you prefer to get chat_id.
+Add chat_id to config.toml, e.g: `chat_id = 123456789`.
+Update `key` in config.toml, string and no spaces, e.g: `key = 'telegram_atom_proposals'`.
+Currently we support only telegram, so `type = 'telegram'`.
+
+## Configure bot
+### Keys management
+Now let's proceed with keys setup. These keys will be used to vote for proposals.
+If you want to create new wallet run:
 
 ```
-janusbot init
+janus keys add WALLET_NAME
 ```
+If you want to import existing one run:
+```
+janus keys add WALLET_NAME --recover
+```
+Follow instructions.
 
-Fill all forms step by step as in example:
+### Setup network
+Currently we have initial values for cosmos network, edit those for your preferred network.
+`transport` is your transport key, we added before: `telegram_atom_proposals` in our case.
+Here is a [complete example]() of config.toml you should have in the end.
 
-<img src="fill_init_example.png" width="90%">
+## Run the bot
+```
+janus run start
+```
+And that's it! The bot will check for new proposals every five minutes and send you a message if there are any.
 
-### Setup service file
+## Setup service file
 
 1. Create service file
 
@@ -79,11 +107,12 @@ systemctl daemon-reload
 ```
   journalctl -u janusbot.service -f
 ```
+## Well tested networks
 
-### VIDEO GUIDES
-
-- EN - https://www.youtube.com/watch?v=U3DSN1M8tQM
-- RU - https://www.youtube.com/watch?v=LDzwrBmEOS0
+- Cosmos Hub
+- Lava Network
+- Osmosis
+- May work for many others cosmos SDK based networks, but not tested yet.
 
 ## SUPPORT US
 
