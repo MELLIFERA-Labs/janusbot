@@ -9,15 +9,31 @@ There is no need to vote via cli or web UI, just setup a bot with your validator
 <img src="work_bot_example.png" width="40%">
 
 # How to run a bot
+### Get the binary
+#### Download the latest release
+
 First download the latest release:
 ```
 wget https://github.com/MELLIFERA-Labs/janusbot/releases/download/v0.0.3/janusbot-linux-amd64
 ```
+#### Build from sources 
+1. install bun (JavaScript runtime). Go to site and fallow instructions: https://bun.sh
+2. Run build commands in root of project
+3. Install dependencies
+```bash 
+bun install 
+```
+4. Build binary
+```bash 
+bun build ./src/cli/index.ts --compile --outfile janusbot 
+```
+Now you have `janusbot` binary in root of project
+
 ## Initialize the bot:
 ```
 janus init
 ```
-## Verify it worked
+## Verify that config is created
 
 ```
 cat $HOME/.janus/config.toml
@@ -34,7 +50,7 @@ Set token environment variable, variable name is `TELEGRAM_BOT_TOKEN`, e.g: `TEL
 ## Retrieve chat_id 
 Now we need chat_id, so our bot knows where to send messages. It may be either group or private chat. In telegram look for `@username_to_id_bot`, or any other way you prefer to get chat_id.
 Add chat_id to config.toml, e.g: `chat_id = 123456789`.
-Update `key` in config.toml, string and no spaces, e.g: `key = 'telegram_atom_proposals'`.
+Update `key` in config.toml, string and no spaces, e.g: `key = 'telegram_cosmos_proposals'`.
 Currently we support only telegram, so `type = 'telegram'`.
 
 ## Configure bot
@@ -53,8 +69,8 @@ Follow instructions.
 
 ### Setup network
 Currently we have initial values for cosmos network, edit those for your preferred network.
-`transport` is your transport key, we added before: `telegram_atom_proposals` in our case.
-Here is a [complete example]() of config.toml you should have in the end.
+`transport` is your transport key, we added before: `telegram_cosmos_proposals` in our case.
+Here is a [complete example](./config.example.toml) of config.toml you should have in the end.
 
 ## Run the bot
 ```
