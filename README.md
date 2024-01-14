@@ -31,7 +31,7 @@ Now you have `janusbot` binary in root of project
 
 ## Initialize the bot:
 ```
-janus init
+janusbot init
 ```
 ## Verify that config is created
 
@@ -59,11 +59,11 @@ Now let's proceed with keys setup. These keys will be used to vote for proposals
 If you want to create new wallet run:
 
 ```
-janus keys add WALLET_NAME
+janusbot keys add WALLET_NAME
 ```
 If you want to import existing one run:
 ```
-janus keys add WALLET_NAME --recover
+janusbot keys add WALLET_NAME --recover
 ```
 Follow instructions.
 
@@ -74,7 +74,7 @@ Here is a [complete example](./config.example.toml) of config.toml you should ha
 
 ## Run the bot
 ```
-janus run start
+janusbot run start
 ```
 And that's it! The bot will check for new proposals every five minutes and send you a message if there are any.
 
@@ -96,7 +96,7 @@ After=network-online.target
 
 [Service]
 User=<USER>
-ExecStart=/usr/bin/janusbot start
+ExecStart=/usr/bin/janusbot run start
 Restart=on-failure
 RestartSec=3
 LimitNOFILE=4096
