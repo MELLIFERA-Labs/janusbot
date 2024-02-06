@@ -14,7 +14,7 @@ There is no need to vote via cli or web UI, just setup a bot with your validator
 
 First download the latest release:
 ```
-wget https://github.com/MELLIFERA-Labs/janusbot/releases/download/v0.0.3/janusbot-linux-amd64
+wget https://github.com/MELLIFERA-Labs/janusbot/releases/download/0.2.0/janusbot-linux-amd64
 ```
 #### Build from sources 
 1. install bun (JavaScript runtime). Go to site and fallow instructions: https://bun.sh
