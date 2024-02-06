@@ -24,8 +24,11 @@ prefix = 'cosmos'
 # Decimals (Required)
 decimals = 6
 wallet-key = ['my_wallet']
-# RPC endpoints (Required)
+# RPC endpoints (Optional)
 net = { rpc = ['https://rpc.cosmos.directory/cosmoshub'] }
+# Lava protocol configuration (Optinal) 
+lava = { chain = "COS5" }
+# `lava` or `net`.One of this configuration is required 
 # This will be used to create links to the block explorer. Links to proposals and trx result 
 explorer = { proposal = 'https://www.mintscan.io/cosmos/proposals/:id', trx = 'https://www.mintscan.io/cosmos/txs/:hash' }
 # Specify the transport to send notifications. Which is defined above (Required)

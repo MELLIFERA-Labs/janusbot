@@ -6,7 +6,7 @@ Self hosted Bot to easy vote in cosmos ecosystem
 
 There is no need to vote via cli or web UI, just setup a bot with your validator or wherever you want and get notifications with vote options and vote **_directly in telegram!_**
 
-<img src="work_bot_example.png" width="40%">
+<img src="work_bot_example.png" width="30%">
 
 # How to run a bot
 ### Get the binary
@@ -71,6 +71,17 @@ Follow instructions.
 Currently we have initial values for cosmos network, edit those for your preferred network.
 `transport` is your transport key, we added before: `telegram_cosmos_proposals` in our case.
 Here is a [complete example](./config.example.toml) of config.toml you should have in the end.
+#### Lava integration 
+> [Lava](https://lavanet.xyz) is a modular data network for scaling access to any blockchain. The network can flexibly support any RPC and API, and node providers compete to offer the fastest and most reliable service
+
+If you want to use RPC with Lava network, you can add `lava` section to config.toml, e.g:
+```toml
+[[network]]
+#... 
+lava = { chain = 'COS5' }
+```
+It's also require `LAVA_PRIV_KEY` environment variable to be set. Set it in .env or in any other way you prefer.
+To get `LAVA_PRIV_KEY` look at [lava doc](https://docs.lavanet.xyz/sdk-backend/#%EF%B8%8F-recommended-flow).
 
 ## Run the bot
 ```
