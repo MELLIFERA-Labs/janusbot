@@ -1,5 +1,5 @@
 import { FETCH_REQUEST_TIMEOUT } from '../constants'
-
+import path from 'path'
 export function urlResolve(from: string, to: string): string {
   const resolvedUrl = new URL(to, new URL(from, 'resolve://'))
   if (resolvedUrl.protocol === 'resolve:') {
@@ -7,7 +7,7 @@ export function urlResolve(from: string, to: string): string {
     const { pathname, search, hash } = resolvedUrl
     return pathname + search + hash
   }
-  return resolvedUrl.toString()
+  return path.posix.join(from, to).replace(':/', '://')
 }
 
 type fetchWithTimeoutInit = Omit<RequestInit, 'signal'> & { timeout?: number }

@@ -1,6 +1,6 @@
 {
   "name": "janusbot",
-  "version": "1.0.0",
+  "version": "0.2.0",
   "description": "Self hosted Bot to easy vote in cosmos ecosystem",
   "type": "module",
   "main": "src/cli/index.ts",
@@ -46,6 +46,7 @@
     "@grammyjs/auto-retry": "^1.1.1",
     "@inquirer/confirm": "^2.0.15",
     "@inquirer/password": "^1.1.14",
+    "@lavanet/lava-sdk": "^0.33.3",
     "ajv": "^8.12.0",
     "chalk": "^5.3.0",
     "commander": "^11.1.0",
@@ -54,6 +55,7 @@
     "lowdb": "^6.1.1",
     "mathjs": "^12.2.1",
     "pino": "^8.17.2",
+    "telegram-escape": "^1.1.1",
     "telegram-format": "^3.0.1",
     "toml": "^3.0.0"
   }

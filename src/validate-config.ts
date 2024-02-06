@@ -54,6 +54,15 @@ const configSchema = {
             },
             required: ['rpc'],
           },
+          lava: {
+            type: 'object',
+            properties: {
+              chain: {
+                type: 'string',
+              },
+            },
+            required: ['chain'],
+          },
         },
         required: [
           'key',
@@ -61,11 +70,11 @@ const configSchema = {
           'chain-id',
           'hd-path',
           'denom',
-          'net',
           'wallet-key',
           'transport',
           'decimals',
         ],
+        anyOf: [{ required: ['net'] }, { required: ['lava'] }],
       },
       minItems: 1, // Ensure at least one element in the array
     },
@@ -107,9 +116,21 @@ export const validateProcessConfig = async (
   }
   // 1. check that chaind id match with rpc
   for (const network of config.network) {
+    if (network.lava) {
+      if (!process.env.LAVA_PRIV_KEY) {
+        return {
+          isValid: false,
+          errors: `Network "${network.key}" has lava protocol configuration, but env var "LAVA_PRIV_KEY" not found`,
+          config: null,
+        }
+      }
+      // skip rpc check beacuse use lava protocol
+      continue
+    }
     const rpc = network.net.rpc
     const chainId = network['chain-id']
     let failedRequests = 0
+
     for (const rpcUrl of rpc) {
       const statusRPC = urlResolve(rpcUrl, '/status')
       let data: RPCStatusResponse

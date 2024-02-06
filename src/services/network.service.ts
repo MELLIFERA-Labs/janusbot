@@ -9,6 +9,7 @@ import {
   Tendermint34Client,
   Tendermint37Client,
   Comet38Client,
+  CometClient,
 } from '@cosmjs/tendermint-rpc'
 import { Config as ConfigType, Network as NetworkConfig } from '../types/config'
 import { BASE_DIR_DEFAULT } from '../constants'
@@ -20,6 +21,7 @@ import { fetchWithTimeout, urlResolve } from '../utils/helper'
 import { RPCStatusResponse } from '../types/rpc'
 import logger from '../services/app-logger.service'
 import { stringToPath } from '@cosmjs/crypto'
+import { LavaCosmJsRPCClient } from './lavacosmjs'
 const log = logger('services:network')
 
 export interface KeyWithClient {
@@ -34,7 +36,16 @@ export interface NetworkService {
   notifier: Notifier
   networkConfig: NetworkConfig
 }
-const getCometClient = async (rpc: string[]) => {
+const getCometClient = (version: string) => {
+  if (version.startsWith('0.37.')) {
+    return Tendermint37Client
+  } else if (version.startsWith('0.38.')) {
+    return Comet38Client
+  } else {
+    return Tendermint34Client
+  }
+}
+const getCometClientByRpc = async (rpc: string[]) => {
   const versionFromRPC = await (async () => {
     for (const rpcUrl of rpc) {
       try {
@@ -47,14 +58,15 @@ const getCometClient = async (rpc: string[]) => {
     }
     throw new Error('No one rpc is available')
   })()
-
-  if (versionFromRPC.startsWith('0.37.')) {
-    return Tendermint37Client
-  } else if (versionFromRPC.startsWith('0.38.')) {
-    return Comet38Client
-  } else {
-    return Tendermint34Client
-  }
+  return getCometClient(versionFromRPC)
+}
+const getCometClientLava = async (lavaNetwork: LavaCosmJsRPCClient) => {
+  const data = await lavaNetwork.lavaSdk!.sendRelay({
+    method: 'status',
+    params: {},
+    apiInterface: 'tendermintrpc',
+  })
+  return getCometClient(data.result.node_info.version)
 }
 export const createNetworkProvider = async (
   config: ConfigType,
@@ -62,19 +74,27 @@ export const createNetworkProvider = async (
   const fsService = new FsService(BASE_DIR_DEFAULT)
   const networkService = await Promise.all(
     config.network.map(async (net) => {
-      const rpcClient = new RpcReConnectClient(net.net.rpc)
-      rpcClient.on('info', (data) =>
-        log.info({ data, tag: 'sign' }, 'made rpc call'),
-      )
-      rpcClient.on('warning', (data) =>
-        log.warn({ data, tag: 'sign' }, 'failed rpc call before reconnect'),
-      )
-      const CommetClient = await getCometClient(net.net.rpc)
-      const tendermintClient = await CommetClient.create(rpcClient)
-      const query = QueryClient.withExtensions(
-        tendermintClient,
-        setupGovExtension,
-      )
+      let CommetClient: CometClient
+      if (net.net) {
+        const CommetClientClass = await getCometClientByRpc(net.net.rpc)
+        const rpcClient = new RpcReConnectClient(net.net.rpc)
+        rpcClient.on('info', (data) =>
+          log.info({ data, tag: 'sign' }, 'made rpc call'),
+        )
+        rpcClient.on('warning', (data) =>
+          log.warn({ data, tag: 'sign' }, 'failed rpc call before reconnect'),
+        )
+        CommetClient = await CommetClientClass.create(rpcClient)
+      } else {
+        const lavaNetwork = await LavaCosmJsRPCClient.create({
+          privateKey: process.env['LAVA_PRIV_KEY'] as string,
+          chainIds: net.lava.chain,
+        })
+        const CommetClientClass = await getCometClientLava(lavaNetwork)
+        CommetClient = await CommetClientClass.create(lavaNetwork)
+      }
+      // const tendermintClient = await CommetClient.create(rpcClient)
+      const query = QueryClient.withExtensions(CommetClient, setupGovExtension)
       const keysWithClients = await Promise.all(
         net['wallet-key'].map(async (w) => {
           const wallet = fsService.readKeyData(w)
@@ -90,7 +110,7 @@ export const createNetworkProvider = async (
             key: w,
             address: accounts[0].address,
             cosmClient: await SigningStargateClient.createWithSigner(
-              tendermintClient,
+              CommetClient,
               signer,
             ),
           }

@@ -5,6 +5,8 @@ import {
   TextProposal,
 } from 'cosmjs-types/cosmos/gov/v1beta1/gov'
 import { createMessageFromProposal } from './msg/vote.message'
+import { MsgSoftwareUpgrade } from 'cosmjs-types/cosmos/upgrade/v1beta1/tx'
+import { HTML } from 'telegram-escape'
 import logger from '../../services/app-logger.service'
 import { WORKER_INTERVAL } from '../../constants'
 const log = logger('bot:telegram:worker')
@@ -29,6 +31,20 @@ export const startWoker = async (
         '',
         '',
       )
+      // eslint-disable-next-line no-inner-declarations, @typescript-eslint/no-explicit-any
+      function decodeAndConstractTitle(msg: any) {
+        if (
+          msg!.typeUrl === '/cosmos.distribution.v1beta1.MsgCommunityPoolSpend'
+        ) {
+          return 'Community spend proposal. See details in explorer.'
+        }
+        if (msg!.typeUrl === '/cosmos.upgrade.v1beta1.MsgSoftwareUpgrade') {
+          const data = MsgSoftwareUpgrade.decode(msg!.value)
+          return `Software upgrade proposal. New version: ${data.plan.name}`
+          // return data
+        }
+        return TextProposal.decode(msg.value)?.title
+      }
       const dbStore = dbService.getStore(networkService.networkKey)
       for (const proposal of proposalData.proposals) {
         const proposalId = proposal.proposalId.toString()
@@ -43,11 +59,12 @@ export const startWoker = async (
         }
 
         const titleProposal = proposal.content?.value
-          ? TextProposal.decode(proposal.content?.value).title
+          ? decodeAndConstractTitle(proposal.content)
           : "[ERROR: Can't process title proposal]"
         const textProposal = createMessageFromProposal(
           {
-            title: titleProposal,
+            title: HTML`${titleProposal}`,
+            type: proposal.content?.typeUrl,
             proposalId: proposalId,
             votingStartTime: convertSecondsToDate(
               Number(proposal.votingStartTime.seconds.toString()),
@@ -59,6 +76,7 @@ export const startWoker = async (
           networkService.networkKey,
           networkService.networkConfig.explorer?.proposal,
         )
+
         const msgId = await networkService.notifier.sendMessage(textProposal)
         log.info(
           `Proposal: ${proposalId} for network: ${networkService.networkKey} sent`,

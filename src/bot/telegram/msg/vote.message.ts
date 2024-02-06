@@ -12,17 +12,18 @@ export function createMessageFromProposal(
     proposalId: string
     votingStartTime: string
     votingEndTime: string
+    type?: string
   },
   network: string,
   voteUrl?: string,
 ): string {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  return `New proposal #${proposal?.proposalId} in <b>${network}</b> \n\n  <b>\n${
+  return `New proposal #${proposal?.proposalId} in <b>${network}</b> \n\n  <b>\n"${
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     //@ts-ignore
     proposal.title
-  }</b>\n\n\nStart: ${
+  }"</b>\n\ntype: "${proposal.type ?? '[Unknown]'}"\n\nStart:${
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     //@ts-ignore
     proposal.votingStartTime.split('T')[0]

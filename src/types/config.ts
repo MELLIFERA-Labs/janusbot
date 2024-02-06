@@ -14,6 +14,9 @@ export interface Network {
   net: {
     rpc: string[]
   }
+  lava: {
+    chain: string
+  }
 }
 
 export interface Transport {
