@@ -6,7 +6,7 @@ Self hosted Bot to easy vote in cosmos ecosystem
 
 There is no need to vote via cli or web UI, just setup a bot with your validator or wherever you want and get notifications with vote options and vote **_directly in telegram!_**
 
-<img src="work_bot_example.png" width="30%">
+<img src="bot_in_work_example.png" width="30%">
 
 # How to run a bot
 ### Get the binary
